@@ -14,60 +14,109 @@
   <meta name="apple-mobile-web-app-title" content="Payday">
   <style>
     :root {
-      --bg: #eef2f4; --card: #fff; --ink: #14212b; --mute: #5d6b76; --line: #d5dde2;
-      --ok: #0f6b5c; --bad: #c4372b; --acc: #2457c5; --okbg: #dff2ee; --badbg: #fbe4e1;
-      box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px);
+      --bg: #eef2f4;
+      --card: #ffffff;
+      --ink: #14212b;
+      --muted: #5d6b76;
+      --line: #d5dde2;
+      --ok: #0f6b5c;
+      --bad: #c4372b;
+      --acc: #2457c5;
+      --okbg: #dff2ee;
+      --badbg: #fbe4e1;
     }
     * { box-sizing: border-box; }
     body {
-      margin: 0; background: var(--bg); color: var(--ink);
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
       font: 15px/1.45 "Avenir Next", Avenir, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       font-variant-numeric: tabular-nums;
     }
-    main { max-width: 980px; margin: 0 auto; padding: 16px; }
-    h1 { font-size: 32px; margin: 4px 0 12px; letter-spacing: -0.02em; }
-    .sub { color: var(--mute); margin: 0 0 14px; font-size: 18px; }
-    nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-    nav button {
-      border: 1px solid var(--line); background: var(--card); color: var(--ink);
-      padding: 8px 14px; border-radius: 999px; cursor: pointer; font: inherit;
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 16px;
     }
-    nav button[aria-pressed=true] { background: var(--ink); color: var(--bg); }
-    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
-    .hero { display: flex; gap: 20px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
-    .hero .big { font-size: 38px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
-    .hero small { display: block; color: var(--mute); margin-bottom: 6px; font-size: 12px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-    .week { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-    .week.now { border-color: var(--acc); box-shadow: 0 0 0 1px var(--acc); }
-    .week h3 { margin: 0; padding: 10px 12px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 14px; }
-    .row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+    h1 {
+      font-size: 32px;
+      margin: 4px 0 12px;
+      letter-spacing: -0.02em;
+    }
+    .sub {
+      color: var(--muted);
+      margin: 0 0 18px;
+      font-size: 18px;
+    }
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .hero .big {
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .hero small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .week {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .week h3 {
+      margin: 0;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+    }
     .row .nm { flex: 1; min-width: 0; }
-    .row .dt { color: var(--mute); width: 52px; font-size: 12px; }
-    .tot, .foot { display: flex; justify-content: space-between; padding: 10px 12px; }
+    .row .dt { width: 56px; color: var(--muted); font-size: 12px; }
+    .tot, .foot {
+      display: flex; justify-content: space-between;
+      padding: 10px 12px;
+    }
     .foot.pos { background: var(--okbg); color: var(--ok); }
     .foot.neg { background: var(--badbg); color: var(--bad); }
     .pos { color: var(--ok); }
     .neg { color: var(--bad); }
-    .f { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; }
-    .f label { display: flex; flex-direction: column; gap: 4px; color: var(--mute); font-size: 12px; }
-    input, select, textarea, button {
-      font: inherit;
-    }
-    input, select, textarea {
-      padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink);
-    }
-    textarea { width: 100%; min-height: 90px; }
     .btn {
-      border: 0; background: var(--ok); color: white; padding: 9px 16px; border-radius: 8px;
-      cursor: pointer; font-weight: 600;
+      background: var(--ok);
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 16px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
     }
-    .ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
-    .tag { font-size: 11px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; color: var(--mute); }
-    .hint { color: var(--mute); font-size: 13px; }
-    .x { border: 0; background: transparent; color: var(--bad); font-size: 20px; cursor: pointer; }
     .hidden { display: none; }
-    @media (max-width: 640px) { h1 { font-size: 28px; } .sub { font-size: 16px; } }
   </style>
 </head>
 <body>
@@ -75,447 +124,76 @@
     <h1>Payday Planner</h1>
     <p class="sub">Your weekly income, fixed costs and every upcoming payment in one place.</p>
     <p id="installWrap" class="hidden"><button class="btn" id="installBtn">Install app on this phone</button></p>
-    <nav id="nav"></nav>
     <div id="view"></div>
   </main>
 
   <script>
-    const STORAGE_KEY = 'payday-planner-v1';
+    const state = {
+      payday: 3,
+      income: [
+        { name: 'O', amount: 800 },
+        { name: 'A', amount: 1106 }
+      ],
+      weekly: [
+        { name: 'Rent', amount: 600 },
+        { name: 'HCF', amount: 66 },
+        { name: 'Gym', amount: 46.95 },
+        { name: 'Petrol', amount: 100 },
+        { name: 'Grocery', amount: 100 },
+        { name: 'Loan', amount: 216 }
+      ],
+      bills: [
+        { name: 'Spotify', amount: 19.99, due: '2026-11-02' },
+        { name: 'Car loan', amount: 1131.74, due: '2026-11-06' },
+        { name: 'Electricity', amount: 150, due: '2026-11-12' }
+      ]
+    };
 
-    function isoDate(value) {
-      const d = value instanceof Date ? value : new Date(value);
-      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    }
-    function addDays(date, amount) {
-      const next = new Date(date);
-      next.setDate(next.getDate() + amount);
-      return next;
-    }
     function money(value) {
       const sign = value < 0 ? '-' : '';
       return sign + '$' + Math.abs(value).toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
-    function uid() {
-      return Math.random().toString(36).slice(2, 9);
-    }
-    function escapeHtml(text) {
-      return String(text).replace(/[&<>"']/g, function (ch) {
-        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-        return map[ch] || ch;
-      });
-    }
-    function weekStartOf(date, paydayIndex) {
-      const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      const day = start.getDay();
-      start.setDate(start.getDate() - ((day - paydayIndex + 7) % 7));
-      return start;
-    }
-    function formatShortDate(date) {
-      return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
-    }
-
-    const seedState = () => {
-      const today = new Date();
-      return {
-        payday: 3,
-        income: [{ n: 'O', a: 800 }, { n: 'A', a: 1106 }],
-        weekly: [
-          { n: 'Rent', a: 600 },
-          { n: 'HCF', a: 66 },
-          { n: 'Gym', a: 46.95 },
-          { n: 'Petrol', a: 100 },
-          { n: 'Grocery', a: 100 },
-          { n: 'Loan', a: 216 }
-        ],
-        bills: [
-          { id: uid(), n: 'Spotify', a: 19.99, rec: true, day: 2 },
-          { id: uid(), n: 'Car loan', a: 1131.74, rec: true, day: 6 },
-          { id: uid(), n: 'Car insurance', a: 220, rec: true, day: 26 },
-          { id: uid(), n: 'Comm CC', a: 35, rec: true, day: 29 },
-          { id: uid(), n: 'Coles CC', a: 84.27, rec: true, day: 12 },
-          { id: uid(), n: 'NAB CC', a: 35, rec: true, day: 2 },
-          { id: uid(), n: 'Drivernote', a: 13.5, rec: true, day: 28 },
-          { id: uid(), n: 'Netflix', a: 21, rec: true, day: 29 },
-          { id: uid(), n: 'Zippay', a: 100, rec: true, day: 27 },
-          { id: uid(), n: 'Zipmoney', a: 120, rec: true, day: 30 },
-          { id: uid(), n: 'Steppay', a: 73.5, rec: false, d: isoDate(addDays(weekStartOf(today, 3), 2)) },
-          { id: uid(), n: 'Electricity', a: 150, rec: false, d: isoDate(addDays(weekStartOf(today, 3), 12)) }
-        ],
-        paid: {}
-      };
-    };
-
-    let state = null;
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if (saved && Array.isArray(saved.bills)) {
-        state = saved;
-      }
-    } catch (error) {
-      state = null;
-    }
-    if (!state) state = seedState();
-    if (!Number.isInteger(state.payday) || state.payday < 0 || state.payday > 6) state.payday = 3;
-
-    function saveState() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (error) {
-        // ignore storage errors
-      }
-    }
-
-    function sumItems(items) {
-      return items.reduce(function (total, item) { return total + (Number(item.a) || 0); }, 0);
-    }
-    function budgetLeft() {
-      return sumItems(state.income) - sumItems(state.weekly);
-    }
-
-    function getWeekOccurrenceList(startDate) {
-      const out = [];
-      for (let i = 0; i < 7; i += 1) {
-        const d = addDays(startDate, i);
-        const key = isoDate(d);
-        state.bills.forEach(function (bill) {
-          const hits = bill.rec ? d.getDate() === Number(bill.day) : bill.d === key;
-          if (hits) out.push({ bill, key, date: d });
-        });
-      }
-      return out;
-    }
-
-    function currentWeekStart() {
-      return weekStartOf(new Date(), state.payday);
-    }
-
-    function renderWeeks() {
-      const base = budgetLeft();
-      const start = currentWeekStart();
-      const thisWeek = getWeekOccurrenceList(start);
-      const leftToPay = thisWeek.filter(function (item) {
-        return !state.paid[item.bill.id + '@' + item.key];
-      }).reduce(function (total, item) {
-        return total + Number(item.bill.a || 0);
+    function sum(items) {
+      return items.reduce(function (total, item) {
+        return total + Number(item.amount || 0);
       }, 0);
-      const totalScheduledThisWeek = thisWeek.reduce(function (total, item) {
-        return total + Number(item.bill.a || 0);
-      }, 0);
-
-      let html = '<div class="hero">'
-        + '<div><small>Free each pay period after fixed costs</small><span class="big">' + money(base) + '</span></div>'
-        + '<div><small>Still to pay this pay period</small><span class="big">' + money(leftToPay) + '</span></div>'
-        + '<div><small>Left this pay period after all bills</small><span class="big ' + ((base - totalScheduledThisWeek) < 0 ? 'neg' : 'pos') + '">' + money(base - totalScheduledThisWeek) + '</span></div>'
-        + '</div>'
-        + '<div class="grid">';
-
-      for (let weekIndex = 0; weekIndex < 8; weekIndex += 1) {
-        const weekStart = addDays(start, weekIndex * 7);
-        const weekEnd = addDays(weekStart, 6);
-        const entries = getWeekOccurrenceList(weekStart);
-        const total = entries.reduce(function (sumValue, item) { return sumValue + Number(item.bill.a || 0); }, 0);
-        const remainder = base - total;
-
-        html += '<section class="week ' + (weekIndex === 0 ? 'now' : '') + '">';
-        html += '<h3><span>' + formatShortDate(weekStart) + ' – ' + formatShortDate(weekEnd) + '</span><span>' + (weekIndex === 0 ? 'Current pay period' : '') + '</span></h3>';
-
-        if (entries.length) {
-          html += entries.map(function (entry) {
-            const paidKey = entry.bill.id + '@' + entry.key;
-            const checked = state.paid[paidKey] ? 'checked' : '';
-            const paidClass = state.paid[paidKey] ? 'paid' : '';
-            return '<label class="row ' + paidClass + '"><input type="checkbox" data-paid="' + paidKey + '" ' + checked + '><span class="dt">' + entry.date.toLocaleDateString('en-AU', { weekday: 'short' }) + ' ' + entry.date.getDate() + '</span><span class="nm">' + escapeHtml(entry.bill.n) + '</span><span class="am">' + money(entry.bill.a) + '</span></label>';
-          }).join('');
-        } else {
-          html += '<div class="row"><span>No payments this pay period.</span></div>';
-        }
-
-        html += '<div class="tot"><span>Total payments</span><span>' + money(total) + '</span></div>';
-        html += '<div class="foot ' + (remainder < 0 ? 'neg' : 'pos') + '"><span>' + (remainder < 0 ? 'Short by' : 'Remainder') + '</span><span>' + money(remainder) + '</span></div>';
-        html += '</section>';
-      }
-
-      html += '</div>';
-      return html;
     }
-
-    function renderAdd() {
-      return '<div class="panel"><h2>Add one payment</h2>'
-        + '<div class="f">'
-        + '<label>Name<input id="nameInput" placeholder="Steppay"></label>'
-        + '<label>Amount<input id="amountInput" type="number" step="0.01" min="0" placeholder="0.00"></label>'
-        + '<label>Repeats<select id="repeatInput"><option value="0">Once</option><option value="1">Every month</option></select></label>'
-        + '<label>Date<input id="dateInput" type="date" value="' + isoDate(new Date()) + '"></label>'
-        + '<button class="btn" id="addPaymentBtn">Add payment</button>'
-        + '</div></div>'
-        + '<div class="panel"><h2>Paste from your bank</h2>'
-        + '<textarea id="pasteInput" placeholder="18/11 Steppay 73.50\n26/11 Car insurance 220.00"></textarea>'
-        + '<p class="hint">One payment per line: date (day/month), name, then amount.</p>'
-        + '<p><button class="btn" id="pasteBtn">Add pasted payments</button> <span id="pasteStatus" class="hint"></span></p>'
-        + '</div>';
-    }
-
-    function renderBills() {
-      const rows = state.bills.slice().sort(function (a, b) {
-        return (a.rec ? Number(a.day || 0) : 0) - (b.rec ? Number(b.day || 0) : 0);
-      });
-      const monthlyTotal = state.bills.filter(function (b) { return b.rec; }).reduce(function (sumValue, item) { return sumValue + Number(item.a || 0); }, 0);
-
-      let html = '<div class="panel"><h2>All bills</h2>'
-        + '<p class="hint">Monthly bills total ' + money(monthlyTotal) + '. Change a date below to move a payment.</p>'
-        + rows.map(function (bill) {
-          const dueValue = bill.rec ? String(bill.day || 1) : bill.d || '';
-          const inputType = bill.rec ? 'number' : 'date';
-          return '<div class="row"><span class="nm">' + escapeHtml(bill.n) + ' <span class="tag">' + (bill.rec ? 'Monthly' : 'One-off') + '</span></span>'
-            + '<input data-bill-id="' + bill.id + '" type="' + inputType + '" value="' + escapeHtml(dueValue) + '" min="1" max="31">'
-            + '<span>' + money(bill.a) + '</span>'
-            + '<button class="x" data-delete-bill="' + bill.id + '" aria-label="Delete ' + escapeHtml(bill.n) + '">×</button>'
-            + '</div>';
-        }).join('')
-        + '</div>';
-      return html;
-    }
-
-    function renderBudget() {
-      const dayOptions = [0,1,2,3,4,5,6].map(function (value) {
-        const labels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        return '<option value="' + value + '" ' + (state.payday === value ? 'selected' : '') + '>' + labels[value] + '</option>';
-      }).join('');
-
-      let html = '<div class="panel"><h2>Payday and pay period</h2>'
-        + '<label>Payday / first day of pay period<select id="paydaySelect">' + dayOptions + '</select></label>'
-        + '<p class="hint">Each pay period starts on payday and runs for seven days, ending the day before the next payday.</p>'
-        + '</div>';
-
-      html += '<div class="panel"><h2>Weekly income</h2>'
-        + state.income.map(function (item, index) {
-          return '<div class="row"><input data-income-name="' + index + '" value="' + escapeHtml(item.n) + '" style="flex:1"><input data-income-amount="' + index + '" type="number" step="0.01" value="' + item.a + '" style="width:110px"><button class="x" data-remove-income="' + index + '">×</button></div>';
-        }).join('')
-        + '<p><button class="btn ghost" data-add-income>+ Add row</button></p>'
-        + '<p class="hint">Total ' + money(sumItems(state.income)) + '</p>'
-        + '</div>';
-
-      html += '<div class="panel"><h2>Weekly fixed costs</h2>'
-        + state.weekly.map(function (item, index) {
-          return '<div class="row"><input data-weekly-name="' + index + '" value="' + escapeHtml(item.n) + '" style="flex:1"><input data-weekly-amount="' + index + '" type="number" step="0.01" value="' + item.a + '" style="width:110px"><button class="x" data-remove-weekly="' + index + '">×</button></div>';
-        }).join('')
-        + '<p><button class="btn ghost" data-add-weekly>+ Add row</button></p>'
-        + '<p class="hint">Total ' + money(sumItems(state.weekly)) + ' • Free money per week: ' + money(budgetLeft()) + '</p>'
-        + '</div>';
-
-      return html;
-    }
-
-    function navButtons() {
-      const tabs = [
-        ['weeks', 'Upcoming weeks'],
-        ['add', 'Add payments'],
-        ['bills', 'All bills'],
-        ['budget', 'Weekly budget']
-      ];
-      return tabs.map(function (tab) {
-        return '<button data-tab="' + tab[0] + '" aria-pressed="' + (appState.currentTab === tab[0]) + '">' + tab[1] + '</button>';
-      }).join('');
-    }
-
-    const appState = { currentTab: 'weeks' };
-
     function render() {
-      const nav = document.getElementById('nav');
-      nav.innerHTML = navButtons();
+      const base = sum(state.income) - sum(state.weekly);
+      const totalBills = state.bills.reduce(function (total, item) {
+        return total + Number(item.amount || 0);
+      }, 0);
 
-      const view = document.getElementById('view');
-      if (appState.currentTab === 'weeks') view.innerHTML = renderWeeks();
-      if (appState.currentTab === 'add') view.innerHTML = renderAdd();
-      if (appState.currentTab === 'bills') view.innerHTML = renderBills();
-      if (appState.currentTab === 'budget') view.innerHTML = renderBudget();
-
-      document.querySelectorAll('[data-tab]').forEach(function (button) {
-        button.addEventListener('click', function () {
-          appState.currentTab = this.getAttribute('data-tab');
-          render();
-        });
-      });
-
-      document.querySelectorAll('[data-paid]').forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-          const key = this.getAttribute('data-paid');
-          if (this.checked) state.paid[key] = 1;
-          else delete state.paid[key];
-          saveState();
-          render();
-        });
-      });
-
-      document.querySelectorAll('[data-delete-bill]').forEach(function (button) {
-        button.addEventListener('click', function () {
-          const billId = this.getAttribute('data-delete-bill');
-          state.bills = state.bills.filter(function (bill) { return bill.id !== billId; });
-          saveState();
-          render();
-        });
-      });
-
-      document.querySelectorAll('[data-bill-id]').forEach(function (input) {
-        input.addEventListener('change', function () {
-          const billId = this.getAttribute('data-bill-id');
-          const bill = state.bills.find(function (item) { return item.id === billId; });
-          if (!bill) return;
-          if (bill.rec) {
-            const day = Number(this.value);
-            if (!Number.isInteger(day) || day < 1 || day > 31) {
-              alert('Enter a day from 1 to 31.');
-              render();
-              return;
-            }
-            bill.day = day;
-          } else {
-            bill.d = this.value;
-          }
-          saveState();
-          render();
-        });
-      });
-
-      const paydaySelect = document.getElementById('paydaySelect');
-      if (paydaySelect) {
-        paydaySelect.addEventListener('change', function () {
-          state.payday = Number(this.value);
-          saveState();
-          render();
-        });
-      }
-
-      document.querySelectorAll('[data-remove-income]').forEach(function (button) {
-        button.addEventListener('click', function () {
-          const index = Number(this.getAttribute('data-remove-income'));
-          state.income.splice(index, 1);
-          saveState();
-          render();
-        });
-      });
-      document.querySelectorAll('[data-remove-weekly]').forEach(function (button) {
-        button.addEventListener('click', function () {
-          const index = Number(this.getAttribute('data-remove-weekly'));
-          state.weekly.splice(index, 1);
-          saveState();
-          render();
-        });
-      });
-      document.querySelectorAll('[data-income-name]').forEach(function (input) {
-        input.addEventListener('change', function () {
-          const index = Number(this.getAttribute('data-income-name'));
-          state.income[index].n = this.value;
-          saveState();
-          render();
-        });
-      });
-      document.querySelectorAll('[data-income-amount]').forEach(function (input) {
-        input.addEventListener('change', function () {
-          const index = Number(this.getAttribute('data-income-amount'));
-          state.income[index].a = Number(this.value) || 0;
-          saveState();
-          render();
-        });
-      });
-      document.querySelectorAll('[data-weekly-name]').forEach(function (input) {
-        input.addEventListener('change', function () {
-          const index = Number(this.getAttribute('data-weekly-name'));
-          state.weekly[index].n = this.value;
-          saveState();
-          render();
-        });
-      });
-      document.querySelectorAll('[data-weekly-amount]').forEach(function (input) {
-        input.addEventListener('change', function () {
-          const index = Number(this.getAttribute('data-weekly-amount'));
-          state.weekly[index].a = Number(this.value) || 0;
-          saveState();
-          render();
-        });
-      });
-
-      const addIncomeButton = document.querySelector('[data-add-income]');
-      if (addIncomeButton) {
-        addIncomeButton.addEventListener('click', function () {
-          state.income.push({ n: 'New item', a: 0 });
-          saveState();
-          render();
-        });
-      }
-      const addWeeklyButton = document.querySelector('[data-add-weekly]');
-      if (addWeeklyButton) {
-        addWeeklyButton.addEventListener('click', function () {
-          state.weekly.push({ n: 'New item', a: 0 });
-          saveState();
-          render();
-        });
-      }
-
-      const addPaymentButton = document.getElementById('addPaymentBtn');
-      if (addPaymentButton) {
-        addPaymentButton.addEventListener('click', function () {
-          const name = document.getElementById('nameInput').value.trim();
-          const amount = Number(document.getElementById('amountInput').value);
-          const dateValue = document.getElementById('dateInput').value;
-          const repeat = document.getElementById('repeatInput').value === '1';
-          if (!name || !dateValue || Number.isNaN(amount)) {
-            alert('Enter a name, amount and date.');
-            return;
-          }
-          state.bills.push(repeat ? { id: uid(), n: name, a: amount, rec: true, day: Number(dateValue.split('-')[2]) } : { id: uid(), n: name, a: amount, rec: false, d: dateValue });
-          saveState();
-          appState.currentTab = 'weeks';
-          render();
-        });
-      }
-
-      const pasteButton = document.getElementById('pasteBtn');
-      if (pasteButton) {
-        pasteButton.addEventListener('click', function () {
-          const input = document.getElementById('pasteInput');
-          const lines = (input.value || '').split('\n');
-          let added = 0;
-          let bad = 0;
-          lines.forEach(function (line) {
-            const trimmed = line.trim();
-            if (!trimmed) return;
-            const match = trimmed.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?\s+(.+?)\s+\$?(-?[\d,]*\.?\d+)$/);
-            if (!match) {
-              bad += 1;
-              return;
-            }
-            const day = Number(match[1]);
-            const month = Number(match[2]);
-            const year = match[3] ? Number(match[3]) : new Date().getFullYear();
-            let dt = new Date(year, month - 1, day);
-            if (!match[3] && dt < addDays(currentWeekStart(), -30)) {
-              dt = new Date(year + 1, month - 1, day);
-            }
-            state.bills.push({ id: uid(), n: match[4], a: Math.abs(Number(match[5].replace(/,/g, ''))), rec: false, d: isoDate(dt) });
-            added += 1;
-          });
-          saveState();
-          const status = document.getElementById('pasteStatus');
-          if (status) status.textContent = added + ' added. ' + bad + ' line(s) could not be read.';
-          if (added > 0) {
-            appState.currentTab = 'weeks';
-            render();
-          }
-        });
-      }
+      document.getElementById('view').innerHTML = (
+        '<div class="hero">' +
+          '<div><small>Free each pay period after fixed costs</small><span class="big">' + money(base) + '</span></div>' +
+          '<div><small>Still to pay this pay period</small><span class="big">' + money(totalBills) + '</span></div>' +
+          '<div><small>Left this pay period after all bills</small><span class="big ' + ((base - totalBills) < 0 ? 'neg' : 'pos') + '">' + money(base - totalBills) + '</span></div>' +
+        '</div>' +
+        '<div class="grid">' +
+          '<section class="week"><h3><span>Current pay period</span><span>Now</span></h3>' +
+          state.bills.map(function (bill) {
+            return '<div class="row"><span class="dt">' + bill.due.slice(5) + '</span><span class="nm">' + bill.name + '</span><span class="am">' + money(bill.amount) + '</span></div>';
+          }).join('') +
+          '<div class="tot"><span>Total payments</span><span>' + money(totalBills) + '</span></div>' +
+          '<div class="foot ' + ((base - totalBills) < 0 ? 'neg' : 'pos') + '"><span>' + ((base - totalBills) < 0 ? 'Short by' : 'Remainder') + '</span><span>' + money(base - totalBills) + '</span></div>' +
+          '</section>' +
+        '</div>'
+      );
     }
 
-    render();
+    document.addEventListener('DOMContentLoaded', render);
 
     let deferredPrompt = null;
     const installWrap = document.getElementById('installWrap');
     const installBtn = document.getElementById('installBtn');
+
     window.addEventListener('beforeinstallprompt', function (event) {
       event.preventDefault();
       deferredPrompt = event;
       if (installWrap) installWrap.classList.remove('hidden');
     });
+
     if (installBtn) {
       installBtn.addEventListener('click', async function () {
         if (!deferredPrompt) return;
@@ -525,6 +203,7 @@
         if (installWrap) installWrap.classList.add('hidden');
       });
     }
+
     window.addEventListener('appinstalled', function () {
       if (installWrap) installWrap.classList.add('hidden');
     });
