@@ -1,5 +1,5 @@
-// Scope all cached requests to this GitHub Pages project and keep refreshes current.
-const CACHE = "payday-planner-v3";
+// Payday Planner PWA service worker. Keep all URLs inside the GitHub Pages project scope.
+const CACHE = "payday-planner-v4";
 const BASE = self.registration.scope;
 const ASSETS = [
   BASE,
@@ -36,7 +36,8 @@ self.addEventListener("fetch", event => {
 
   event.respondWith((async () => {
     try {
-      const response = await fetch(request, { cache: "no-cache" });
+      // Always ask GitHub Pages for the newest page; do not keep serving the old demo.
+      const response = await fetch(request, { cache: "no-store" });
       if (response.ok) {
         const cache = await caches.open(CACHE);
         await cache.put(request, response.clone());
