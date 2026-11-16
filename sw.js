@@ -1,5 +1,5 @@
 // Payday Planner PWA service worker. Keep all URLs inside the GitHub Pages project scope.
-const CACHE = "payday-planner-v4";
+const CACHE = "payday-planner-v5";
 const BASE = self.registration.scope;
 const ASSETS = [
   BASE,
@@ -36,7 +36,6 @@ self.addEventListener("fetch", event => {
 
   event.respondWith((async () => {
     try {
-      // Always ask GitHub Pages for the newest page; do not keep serving the old demo.
       const response = await fetch(request, { cache: "no-store" });
       if (response.ok) {
         const cache = await caches.open(CACHE);
