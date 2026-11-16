@@ -17,18 +17,17 @@
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     } catch (error) {
-      // Storage may be disabled or full; notifications can still work for this session.
+      // Notifications may still work for this session if storage is unavailable.
     }
   }
 
   function loadPlanner() {
     try {
       const data = JSON.parse(localStorage.getItem(APP_KEY));
-      if (data && Array.isArray(data.bills)) return data;
+      return data && Array.isArray(data.bills) ? data : null;
     } catch (error) {
-      // Ignore malformed stored data.
+      return null;
     }
-    return null;
   }
 
   function iso(date) {
@@ -44,12 +43,6 @@
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
   }
 
-  function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, function (char) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char];
-    });
-  }
-
   function dueTomorrow(planner, tomorrow) {
     const due = [];
     const moves = planner.moves && typeof planner.moves === 'object' ? planner.moves : {};
@@ -57,25 +50,20 @@
 
     planner.bills.forEach(function (bill) {
       if (bill.rec) {
-        // Check surrounding months so month-end recurring payments are handled correctly.
+        // Check adjacent months as well, so month-end recurring payments work.
         for (let offset = -1; offset <= 1; offset += 1) {
           const month = new Date(tomorrow.getFullYear(), tomorrow.getMonth() + offset, 1);
           const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
           const original = new Date(month.getFullYear(), month.getMonth(), Math.min(Number(bill.day) || 1, lastDay));
-          const occurrenceKey = bill.id + '@' + iso(original);
-          const effective = moves[occurrenceKey] ? dateFromISO(moves[occurrenceKey]) : original;
-          if (sameDay(effective, tomorrow) && !paid[occurrenceKey]) {
-            due.push({ bill: bill, key: occurrenceKey, date: effective });
-          }
+          const key = bill.id + '@' + iso(original);
+          const effective = moves[key] ? dateFromISO(moves[key]) : original;
+          if (sameDay(effective, tomorrow) && !paid[key]) due.push({ bill: bill, key: key, date: effective });
         }
-      } else {
-        if (!bill.d) return;
+      } else if (bill.d) {
         const original = dateFromISO(bill.d);
-        const occurrenceKey = bill.id + '@' + iso(original);
-        const effective = moves[occurrenceKey] ? dateFromISO(moves[occurrenceKey]) : original;
-        if (sameDay(effective, tomorrow) && !paid[occurrenceKey]) {
-          due.push({ bill: bill, key: occurrenceKey, date: effective });
-        }
+        const key = bill.id + '@' + iso(original);
+        const effective = moves[key] ? dateFromISO(moves[key]) : original;
+        if (sameDay(effective, tomorrow) && !paid[key]) due.push({ bill: bill, key: key, date: effective });
       }
     });
     return due;
@@ -90,31 +78,27 @@
           return;
         }
       } catch (error) {
-        // Fall through to the page notification API.
+        // Fall back to the page notification API where available.
       }
     }
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(title, options);
-    }
+    if ('Notification' in window && Notification.permission === 'granted') new Notification(title, options);
   }
 
   async function checkReminders() {
     const settings = loadSettings();
     if (!settings.enabled || !('Notification' in window) || Notification.permission !== 'granted') return;
-
     const planner = loadPlanner();
     if (!planner) return;
 
     const now = new Date();
     const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    const reminders = dueTomorrow(planner, tomorrow);
     const tomorrowKey = iso(tomorrow);
+    const reminders = dueTomorrow(planner, tomorrow);
     settings.sent = settings.sent || {};
 
-    // Keep only recent notification markers to avoid an ever-growing localStorage value.
-    const cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 90);
+    const cutoff = iso(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 90));
     Object.keys(settings.sent).forEach(function (key) {
-      if (key.slice(-10) < iso(cutoff)) delete settings.sent[key];
+      if (key.slice(-10) < cutoff) delete settings.sent[key];
     });
 
     for (const reminder of reminders) {
@@ -134,7 +118,6 @@
 
   function renderSettings() {
     if (!document.body || document.getElementById('reminderSettings')) return;
-    const nav = document.getElementById('tabs');
     const main = document.querySelector('main');
     if (!main) return;
 
@@ -145,7 +128,9 @@
       '<p class="hint">Get a notification one day before unpaid payments are due. Reminders are checked while this app is open or active in the browser. Enable browser notifications and allow this app to notify you.</p>' +
       '<button class="primary" id="reminderToggle" type="button"></button> ' +
       '<span id="reminderStatus" class="hint" role="status" aria-live="polite"></span>';
-    main.insertBefore(panel, nav || main.firstChild);
+
+    // Keep reminder controls below the planner content so they do not interrupt the main view.
+    main.appendChild(panel);
 
     const button = document.getElementById('reminderToggle');
     const status = document.getElementById('reminderStatus');
@@ -185,7 +170,7 @@
       }
       if (permission !== 'granted') {
         refresh();
-        if (status) status.textContent = 'Permission was not granted. Change this site’s notification permission in your browser settings to enable reminders.';
+        status.textContent = 'Permission was not granted. Change this site’s notification permission in your browser settings to enable reminders.';
         return;
       }
       settings.enabled = true;
@@ -199,9 +184,7 @@
   }
 
   renderSettings();
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderSettings, { once: true });
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderSettings, { once: true });
   checkReminders();
   window.addEventListener('focus', checkReminders);
   document.addEventListener('visibilitychange', function () {
