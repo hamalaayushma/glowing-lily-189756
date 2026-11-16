@@ -1,5 +1,5 @@
-// Network-first for updates, with a scoped offline fallback.
-const CACHE = "payday-planner-v2";
+// Scope all cached requests to this GitHub Pages project and keep refreshes current.
+const CACHE = "payday-planner-v3";
 const BASE = self.registration.scope;
 const ASSETS = [
   BASE,
@@ -36,18 +36,16 @@ self.addEventListener("fetch", event => {
 
   event.respondWith((async () => {
     try {
-      const response = await fetch(request);
+      const response = await fetch(request, { cache: "no-cache" });
       if (response.ok) {
         const cache = await caches.open(CACHE);
         await cache.put(request, response.clone());
       }
       return response;
-    } catch {
+    } catch (error) {
       const cached = await caches.match(request);
       if (cached) return cached;
-      if (request.mode === "navigate") {
-        return (await caches.match(BASE)) || Response.error();
-      }
+      if (request.mode === "navigate") return (await caches.match(BASE)) || Response.error();
       return Response.error();
     }
   })());
