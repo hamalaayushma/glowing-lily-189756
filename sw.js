@@ -1,28 +1,34 @@
-// Inject reminder UI into the app's HTML navigation response. GitHub Pages is static,
-// so reminders can fire while the app/browser is active, but cannot be guaranteed
-// while the browser has fully stopped the app without a push-notification backend.
+// Inject reminder and OCR enhancement scripts into HTML navigation responses.
+// GitHub Pages is static, so reminders can fire while the app/browser is active,
+// but cannot be guaranteed while the browser has fully stopped the app without a push backend.
 const CACHE = "payday-planner-v8";
 const BASE = self.registration.scope;
 const ASSETS = [
   BASE,
   new URL("manifest.webmanifest", BASE).href,
   new URL("reminders.js", BASE).href,
+  new URL("ocr-enhance.js", BASE).href,
   new URL("icons/icon-192.png", BASE).href,
   new URL("icons/icon-512.png", BASE).href,
   new URL("icons/maskable-512.png", BASE).href,
   new URL("icons/apple-touch-icon.png", BASE).href
 ];
 
-async function addReminderScript(response) {
+async function addAppScripts(response) {
   const contentType = response.headers.get("content-type") || "";
   if (!response.ok || !contentType.includes("text/html")) return response;
-  const html = await response.text();
-  if (html.includes("reminders.js")) return new Response(html, response);
-  const updated = html.replace(/<\/body\s*>/i, '<script src="./reminders.js" defer></script></body>');
+  let html = await response.text();
+  const scripts = [
+    ['reminders.js', '<script src="./reminders.js" defer></script>'],
+    ['ocr-enhance.js', '<script src="./ocr-enhance.js" defer></script>']
+  ];
+  for (const [file, tag] of scripts) {
+    if (!html.includes(file)) html = html.replace(/<\/body\s*>/i, tag + '</body>');
+  }
   const headers = new Headers(response.headers);
   headers.delete("content-length");
   headers.delete("content-encoding");
-  return new Response(updated, {
+  return new Response(html, {
     status: response.status,
     statusText: response.statusText,
     headers
@@ -56,7 +62,7 @@ self.addEventListener("fetch", event => {
   event.respondWith((async () => {
     try {
       let response = await fetch(request, { cache: "no-store" });
-      if (request.mode === "navigate") response = await addReminderScript(response);
+      if (request.mode === "navigate") response = await addAppScripts(response);
       if (response.ok) {
         const cache = await caches.open(CACHE);
         await cache.put(request, response.clone());
