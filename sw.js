@@ -1,7 +1,7 @@
 // Inject reminder UI into the app's HTML navigation response. GitHub Pages is static,
 // so reminders can fire while the app/browser is active, but cannot be guaranteed
 // while the browser has fully stopped the app without a push-notification backend.
-const CACHE = "payday-planner-v7";
+const CACHE = "payday-planner-v8";
 const BASE = self.registration.scope;
 const ASSETS = [
   BASE,
